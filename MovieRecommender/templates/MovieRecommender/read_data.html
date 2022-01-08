@@ -1,21 +1,13 @@
 {% block content %}
 
-    <style>
-    .datawrapper{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
-    </style>
-    <div class ="data-wrapper">
+    <div>
+
+         {%  for genre in genres %}
         <div>
-
-             {%  for genre in genres %}
-            <div>
-                {{ genre }}
-            </div>
-             {% endfor %}
-
+            {{ genre }}
         </div>
+         {% endfor %}
+
     </div>
 
 {% endblock content %}

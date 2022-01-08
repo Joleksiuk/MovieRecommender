@@ -52,6 +52,9 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = (("genre_id", "name"),)
+
 
 class Company(models.Model):
     company_id = models.IntegerField()

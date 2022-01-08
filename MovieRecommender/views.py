@@ -2,14 +2,14 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import Room, Topic
+from .models import Room, Topic, Genre
 from .forms import RoomForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from .models import Message
-
+import json
 import pandas as p
 from ast import literal_eval
 
@@ -168,9 +168,51 @@ def deleteMessage(request, pk):
     return render(request, 'MovieRecommender/delete.html', {'obj': message})
 
 
+class gen:
+    def __init__(self, my_id, name):
+        self.my_id = my_id
+        self.name = name
+
+
 def readData(request):
     df = p.read_csv('E:/PythonProjects/data/movies_metadata.csv')
-    genres = df['genres'].fillna('[]').apply(literal_eval).apply(lambda x: [i['name'] for i in x] if isinstance(x, list) else [])
-    genres = genres[0][0]
+    genres = df['genres'].fillna('[]').apply(literal_eval).apply(
+        lambda x: [i['name'] for i in x] if isinstance(x, list) else [])
+    genres_id = df['genres'].fillna('[]').apply(literal_eval).apply(
+        lambda x: [i['id'] for i in x] if isinstance(x, list) else [])
+    names = []
+    i = 0
+    j = 0
+    for x in range(0, len(genres)):
+        for y in range(0, len(genres[x])):
+            names.append(genres[x][y])
+
+    names = get_unique_values(names)
+
+    ids = []
+    i = 0
+    j = 0
+    for x in range(0, len(genres_id)):
+        for y in range(0, len(genres_id[x])):
+            ids.append(genres_id[x][y])
+
+    ids = get_unique_values(ids)
+
+    print(names)
+    print(ids)
+
+    for x in range(0, len(names)):
+         Genre.objects.create(genre_id=ids[x], name=names[x])
+
+    genres = df['genres']
     context = {'genres': genres}
     return render(request, 'MovieRecommender/read_data.html', context)
+
+
+def get_unique_values(list1):
+    unique_list = []
+    for x in list1:
+        if x not in unique_list:
+            unique_list.append(x)
+
+    return unique_list
