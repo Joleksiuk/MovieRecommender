@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
+from .models import Message
 
 rooms = [
     {'id': 1, 'name': 'Lets learn python!'},
@@ -31,12 +32,21 @@ def home(request):
 
 def room(request, pk):
     room = Room.objects.get(id=pk)
-    for i in rooms:
-        if i['id'] == int(pk):
-            room = i
+    room_messages = room.message_set.all().order_by('-created')
+    participants = room.participants.all()
 
-    context = {'room': room}
+    if request.method == 'POST':
+        message = Message.objects.create(
+            user=request.user,
+            room=room,
+            body=request.POST.get('body')
+        )
+        room.participants.add(request.user)
+        return redirect('room', pk=room.id)
+
+    context = {'room': room, 'room_messages': room_messages, 'participants': participants}
     return render(request, 'MovieRecommender/room.html', context)
+
 
 @login_required(login_url='login')
 def createRoom(request):
@@ -51,6 +61,7 @@ def createRoom(request):
     return render(request, 'MovieRecommender/room_form.html', context)
 
 
+@login_required(login_url='login')
 def updateRoom(request, pk):
     room = Room.objects.get(id=pk)
     form = RoomForm(instance=room)
@@ -68,6 +79,7 @@ def updateRoom(request, pk):
     return render(request, 'MovieRecommender/room_form.html', context)
 
 
+@login_required(login_url='login')
 def deleteRoom(request, pk):
     room = Room.objects.get(id=pk)
 
@@ -115,7 +127,7 @@ def registerPage(request):
     context = {'page': page, 'form': form}
 
     if request.method == 'POST':
-        form=UserCreationForm(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
@@ -126,3 +138,16 @@ def registerPage(request):
             messages.error(request, 'An error occured during registration')
 
     return render(request, 'MovieRecommender/login_register.html', context)
+
+
+@login_required(login_url='login')
+def deleteMessage(request, pk):
+    message = Message.objects.get(id=pk)
+
+    if request.user != message.user:
+        return HttpResponse('You are not allowed here!!')
+
+    if request.method == 'POST':
+        message.delete()
+        return redirect('home')
+    return render(request, 'MovieRecommender/delete.html', {'obj': message})
