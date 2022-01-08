@@ -45,3 +45,41 @@ class Message(models.Model):
         return self.body[0:50]
 
 
+class Genre(models.Model):
+    genre_id = models.IntegerField()
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+
+class Company(models.Model):
+    company_id = models.IntegerField()
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+
+class Movie(models.Model):
+    movie_id = models.IntegerField()
+    title = models.CharField(max_length=200)
+    overview = models.TextField()
+    budget = models.FloatField()
+
+    genres = models.ManyToManyField(Genre, related_name="genres", blank=True)
+    production_companies = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
+
+    org_language = models.CharField(max_length=200)
+    popularity = models.FloatField()
+    poster_path = models.CharField(max_length=200)
+    release_date = models.CharField(max_length=200)
+    video = models.CharField(max_length=200)
+    vote_average = models.FloatField()
+    vote_count = models.IntegerField()
+
+    def __str__(self):
+        return self.title
+
+
+

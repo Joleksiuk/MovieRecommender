@@ -10,6 +10,9 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from .models import Message
 
+import pandas as p
+from ast import literal_eval
+
 rooms = [
     {'id': 1, 'name': 'Lets learn python!'},
     {'id': 2, 'name': 'Lets learn python2!'},
@@ -27,7 +30,7 @@ def home(request):
     topics = Topic.objects.all()
     room_count = rooms.count()
     room_messages = Message.objects.filter(Q(room__name__icontains=q))
-    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'room_messages':room_messages}
+    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'room_messages': room_messages}
     return render(request, 'MovieRecommender/home.html', context)
 
 
@@ -53,7 +56,7 @@ def userProfile(request, pk):
     user = User.objects.get(id=pk)
     rooms = user.room_set.all()
     room_messages = user.message_set.all()
-    topics= Topic.objects.all()
+    topics = Topic.objects.all()
     context = {'user': user, 'rooms': rooms, 'room_messages': room_messages, 'topics': topics}
     return render(request, 'MovieRecommender/profile.html', context)
 
@@ -163,3 +166,11 @@ def deleteMessage(request, pk):
         message.delete()
         return redirect('home')
     return render(request, 'MovieRecommender/delete.html', {'obj': message})
+
+
+def readData(request):
+    df = p.read_csv('E:/PythonProjects/data/movies_metadata.csv')
+    genres = df['genres'].fillna('[]').apply(literal_eval).apply(lambda x: [i['name'] for i in x] if isinstance(x, list) else [])
+    genres = genres[0][0]
+    context = {'genres': genres}
+    return render(request, 'MovieRecommender/read_data.html', context)
