@@ -9,9 +9,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from .models import Message
-import json
 import pandas as p
 from ast import literal_eval
+import random as rand
+import requests
+import json
 
 rooms = [
     {'id': 1, 'name': 'Lets learn python!'},
@@ -30,8 +32,38 @@ def home(request):
     topics = Topic.objects.all()
     room_count = rooms.count()
     room_messages = Message.objects.filter(Q(room__name__icontains=q))
-    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'room_messages': room_messages}
+
+    movies = []
+
+    print(get_poster_url(8844))
+    i=0
+    while i <12:
+        index = rand.randint(1, 1000)
+        movie = Movie.objects.get(id=index)
+        poster_url = get_poster_url(movie.movie_id)
+        result = 'https://image.tmdb.org/t/p/original' + poster_url
+        if poster_url!='None':
+            movie.poster_path = result
+            i=i+1
+            movies.append(movie)
+            print(result)
+
+
+
+
+    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'room_messages': room_messages,'movies': movies}
+
     return render(request, 'MovieRecommender/home.html', context)
+
+
+def get_poster_url(movie_id):
+    api = 'https://api.themoviedb.org/3/movie/'+str(movie_id)+'?api_key=4b5f9777a2d363363cbb7d26017f0052&language=en-US'
+    response_API = requests.get(api)
+    data=response_API.text
+    if response_API == '200':
+        print('resppoonse 200')
+    parse_json = json.loads(str(data))
+    return str(parse_json['poster_path'])
 
 
 def room(request, pk):
@@ -54,10 +86,11 @@ def room(request, pk):
 
 def userProfile(request, pk):
     user = User.objects.get(id=pk)
+    profile = Profile.objects.get(user_id=user)
     rooms = user.room_set.all()
     room_messages = user.message_set.all()
     topics = Topic.objects.all()
-    context = {'user': user, 'rooms': rooms, 'room_messages': room_messages, 'topics': topics}
+    context = {'user': user, 'rooms': rooms, 'room_messages': room_messages, 'topics': topics, 'profile': profile}
     return render(request, 'MovieRecommender/profile.html', context)
 
 
@@ -175,29 +208,19 @@ class gen:
 
 
 def readData(request):
-    df = p.read_csv('E:/PythonProjects/data/names.csv')
-    column_names = ['name', 'lastname', 'email', 'birth_date', 'image_path', 'sex', 'password']
-    data = df
-    for x in range(0,len(data)):
 
-        st = data.iloc[x]['name'] + " " + data.iloc[x]['lastname']
-        user = User.objects.get(username=st)
+    #for x in range(1, Movie.objects.all().count()):
+     #   movie = Movie.objects.get(id=x)
+     #   api = 'https://api.themoviedb.org/3/movie/'+str(movie.movie_id)+'?api_key=4b5f9777a2d363363cbb7d26017f0052&language=en-US'
+     #   response_API = requests.get(api)
+     #   data = response_API.text
+     ##   movie.poster_path = 'https://image.tmdb.org/t/p/original'+str(parse_json['poster_path'])
 
-        Profile.objects.create(
-            user_id=user,
-            name=user.username,
-            picture_path=data.iloc[x]['image_path'],
-            birth_date=data.iloc[x]['birth_date'],
-            sex=data.iloc[x]['sex']
-        )
-
-    print(data)
-    context={'data': data}
+    context = {}
     return render(request, 'MovieRecommender/read_data.html', context)
 
 
 def load_profiles():
-
     df = p.read_csv('E:/PythonProjects/data/names.csv')
     column_names = ['name', 'lastname', 'email', 'birth_date', 'image_path', 'sex', 'password']
     data = df
@@ -215,6 +238,7 @@ def load_profiles():
 
     print(data)
     context = {'data': data}
+
 
 def read_movie_data():
     df = p.read_csv('E:/PythonProjects/data/movies_metadata.csv')

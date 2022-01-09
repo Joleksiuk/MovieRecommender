@@ -1,4 +1,5 @@
 {%  extends 'main.html' %}
+{%  load static %}
 
 {%  block content  %}
 
@@ -8,14 +9,36 @@
         display:grid;
         grid-template-columns: 1fr 3fr 1fr;
     }
+
+    .movie-container{
+        margin:20px;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+    }
+
+    .movie-panel{
+        margin: 10px;
+        width:200px;
+        height:350px;
+    }
     </style>
 
 <div class="home-container">
-
-    <a href="{%  url 'read-data' %}">READ DATA</a>
     <div>
      {%  include 'MovieRecommender/topic_component.html' %}
     </div>
+
+    <!--<a href="{%  url 'read-data' %}">READ DATA</a>-->
+    <div class = "movie-container">
+        {%  for movie in movies %}
+            <div class = "movie-panel">
+                 <h3>{{ movie.title }}</h3>
+                <img   width = "200" height ="300" src="{{movie.poster_path}}"/>
+            </div>
+        {% endfor %}
+    </div>
+
 
     <div>
         <h5>{{ room_count }} rooms available</h5>
