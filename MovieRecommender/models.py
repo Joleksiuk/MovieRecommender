@@ -63,26 +63,32 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = (("company_id", "name"),)
+
 
 class Movie(models.Model):
-    movie_id = models.IntegerField()
-    title = models.CharField(max_length=200)
-    overview = models.TextField()
-    budget = models.FloatField()
+    movie_id = models.IntegerField(default=-1)
+    title = models.CharField(max_length=200,default="")
+    overview = models.TextField(default="")
+    budget = models.FloatField(default=0.0)
 
     genres = models.ManyToManyField(Genre, related_name="genres", blank=True)
-    production_companies = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
+    production_companies = models.ManyToManyField(Company, related_name="companies", blank=True)
 
-    org_language = models.CharField(max_length=200)
-    popularity = models.FloatField()
-    poster_path = models.CharField(max_length=200)
-    release_date = models.CharField(max_length=200)
-    video = models.CharField(max_length=200)
-    vote_average = models.FloatField()
-    vote_count = models.IntegerField()
+    org_language = models.CharField(max_length=200,default="")
+    popularity = models.FloatField(default=0.0)
+    poster_path = models.CharField(max_length=200,default="")
+    release_date = models.CharField(max_length=200,default="")
+    video = models.CharField(max_length=200,default="")
+    vote_average = models.FloatField(default=0.0)
+    vote_count = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ['movie_id']
 
 
 
