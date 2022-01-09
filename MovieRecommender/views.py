@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import Room, Topic, Genre, Company, Movie
+from .models import Room, Topic, Genre, Company, Movie, Profile
 from .forms import RoomForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -175,8 +175,51 @@ class gen:
 
 
 def readData(request):
+    df = p.read_csv('E:/PythonProjects/data/names.csv')
+    column_names = ['name', 'lastname', 'email', 'birth_date', 'image_path', 'sex', 'password']
+    data = df
+    for x in range(0,len(data)):
+
+        st = data.iloc[x]['name'] + " " + data.iloc[x]['lastname']
+        user = User.objects.get(username=st)
+
+        Profile.objects.create(
+            user_id=user,
+            name=user.username,
+            picture_path=data.iloc[x]['image_path'],
+            birth_date=data.iloc[x]['birth_date'],
+            sex=data.iloc[x]['sex']
+        )
+
+    print(data)
+    context={'data': data}
+    return render(request, 'MovieRecommender/read_data.html', context)
+
+
+def load_profiles():
+
+    df = p.read_csv('E:/PythonProjects/data/names.csv')
+    column_names = ['name', 'lastname', 'email', 'birth_date', 'image_path', 'sex', 'password']
+    data = df
+    for x in range(0, len(data)):
+        st = data.iloc[x]['name'] + " " + data.iloc[x]['lastname']
+        user = User.objects.get(username=st)
+
+        Profile.objects.create(
+            user_id=user,
+            name=user.username,
+            picture_path=data.iloc[x]['image_path'],
+            birth_date=data.iloc[x]['birth_date'],
+            sex=data.iloc[x]['sex']
+        )
+
+    print(data)
+    context = {'data': data}
+
+def read_movie_data():
     df = p.read_csv('E:/PythonProjects/data/movies_metadata.csv')
-    column_names=['id', 'title', 'overview', 'budget', 'original_language', 'popularity', 'poster_path', 'release_date', 'video'
+    column_names = ['id', 'title', 'overview', 'budget', 'original_language', 'popularity', 'poster_path',
+                    'release_date', 'video'
         , 'vote_average', 'vote_count']
 
     data = df[column_names]
@@ -193,7 +236,7 @@ def readData(request):
             movie = Movie.objects.filter(movie_id=data.iloc[x]['id'])
             for y in range(0, len(genres_id[x])):
                 grn = Genre.objects.get(genre_id=genres_id[x][y])
-                for z in range (0, len(movie)):
+                for z in range(0, len(movie)):
                     movie[z].genres.add(grn)
 
             for y in range(0, len(companies_id[x])):
@@ -201,8 +244,6 @@ def readData(request):
                 for z in range(0, len(movie)):
                     movie[z].production_companies.add(crn)
         print(movie)
-    context = {}
-    return render(request, 'MovieRecommender/read_data.html', context)
 
 
 def get_unique_values(list1):

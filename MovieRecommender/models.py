@@ -8,6 +8,9 @@ from django.contrib.auth.models import User
 # auto_now_add passed as an argument captures time of creating a query
 
 
+
+
+
 class Topic(models.Model):
     name = models.CharField(max_length=200)
 
@@ -91,4 +94,16 @@ class Movie(models.Model):
         ordering = ['movie_id']
 
 
+class Profile(models.Model):
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    name = models.CharField(max_length=200,default="")
+    picture_path = models.CharField(max_length=200)
+    fav_movies = models.ManyToManyField(Movie, related_name="fav_movies", blank=True)
+    birth_date = models.DateField(default=None)
+    sex = models.CharField(max_length=200,default="")
 
+    #fav_actors
+    #fav_genres
+
+    def __str__(self):
+        return self.name
