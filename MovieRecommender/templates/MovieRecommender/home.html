@@ -34,7 +34,7 @@
         {%  for movie in movies %}
             <div class = "movie-panel">
                  <h3>{{ movie.title }}</h3>
-                <img   width = "200" height ="300" src="{{movie.poster_path}}"/>
+                 <a href="/movie/{{ movie.id }}"><img width = "200" height ="300" src="{{movie.poster_path}}"/></a>
             </div>
         {% endfor %}
     </div>

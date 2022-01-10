@@ -42,6 +42,7 @@ def home(request):
         movie = Movie.objects.get(id=index)
         poster_url = get_poster_url(movie.movie_id)
         result = 'https://image.tmdb.org/t/p/original' + poster_url
+
         if poster_url!='None':
             movie.poster_path = result
             i=i+1
@@ -56,12 +57,36 @@ def home(request):
     return render(request, 'MovieRecommender/home.html', context)
 
 
+def movie(request, pk):
+
+    movie = Movie.objects.get(id=pk)
+    poster_url = get_poster_url(movie.movie_id)
+    result = 'https://image.tmdb.org/t/p/original' + poster_url
+    movie.poster_path=result
+
+    dics = get_movie_genres(movie.movie_id)
+    genres =[]
+    for x in range(0, len(dics)):
+        genres.append(dics[x]['name'])
+
+    context={'movie':movie, 'genres':genres}
+    return render(request,"MovieRecommender/movie.html", context)
+
+
+
+def get_movie_genres(movie_id):
+    api = 'https://api.themoviedb.org/3/movie/' + str(
+        movie_id) + '?api_key=4b5f9777a2d363363cbb7d26017f0052&language=en-US'
+    response_API = requests.get(api)
+    data = response_API.text
+    parse_json = json.loads(str(data))
+    return parse_json['genres']
+
+
 def get_poster_url(movie_id):
     api = 'https://api.themoviedb.org/3/movie/'+str(movie_id)+'?api_key=4b5f9777a2d363363cbb7d26017f0052&language=en-US'
     response_API = requests.get(api)
     data=response_API.text
-    if response_API == '200':
-        print('resppoonse 200')
     parse_json = json.loads(str(data))
     return str(parse_json['poster_path'])
 
