@@ -4,15 +4,41 @@
 {% block content %}
 <style>
 
+
+.ac-footer .ac-icon{position:absolute;left:0;right:0;width:20px;height:30px;margin:auto}.ac-footer .ac-icon-love-dark{background:url("https://community.algolia.com/places/images/svg/icon-heart-dark-66670e8e.svg") no-repeat center center/contain}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(251,54,110,0.4)}70%{box-shadow:0 0 0 30px rgba(251,54,110,0)}100%{box-shadow:0 0 0 0 rgba(251,54,110,0)}}@keyframes pulseHeart{0%{transform:scale(1.3)}70%{transform:scale(1.15)}100%{transform:scale(1)}}.ac-icon-love-dark{display:block;position:relative}.ac-icon-love-dark:before{content:'';display:block;width:8px;height:8px;position:absolute;top:45%;bottom:0;left:50%;transform:translate(-50%, -50%);right:0;z-index:-1;border-radius:100%}.ac-footer-container:hover .ac-icon-love-dark{animation:pulseHeart 1s ease infinite}.ac-footer-container:hover .ac-icon-love-dark:before{animation:pulse 1s ease infinite !important}.ac-icon-triangle{width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:5px solid #788795;position:relative;display:inline-block;margin-left:8px}
+
+.ac-footer .ac-footer-brand:hover .ac-icon-love-dark{background:url("https://community.algolia.com/places/images/svg/icon-heart-light-fc92b1e0.svg") no-repeat center center/contain}
+
+
 </style>
     <div>
         <h1>{{ movie.title }}</h1>
         <a href="/movie/{{ movie.id }}"><img width = "200" height ="300" src="{{movie.poster_path}}"/></a>
         <h4>Overview : {{ movie.overview }}</h4>
+
+
+        <div>
+            {%  include 'MovieRecommender/rating_component.html' %}
+        </div>
+
+
         <h4>Genres: </h4>
-        {% for genre in genres %}
-            <h4>{{ genre }}</h4>
+            {% for genre in genres %}
+                <h4>    {{ genre }}</h4>
+            {% endfor %}
+        <h4>Companies: </h4>
+        {% for company in companies %}
+            <h4>    {{ company }}</h4>
         {% endfor %}
+
+        <section class="ac-footer">
+            <a href = "{% url 'add-favourite' movie.movie_id %}">
+                 <div class="ac-footer-container ac-footer-brand">
+             <span class="ac-icon ac-icon-love-dark"></span>
+          </div>
+            </a>
+</section>
     </div>
 
 {% endblock content %}

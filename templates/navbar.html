@@ -1,16 +1,118 @@
-<a href="/">
-    <h1> LOGO</h1>
+<style>
+
+body {
+    background-image: linear-gradient(130deg, #0e2d44, #41428b, #111a3d, #4f51a7, #607597);
+    font-family: 'Lato';
+    color:white;
+}
+
+.btn {
+  border: none;
+  font-family: 'Lato';
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+  padding: 25px 80px;
+  display: inline-block;
+  margin: 15px 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  outline: none;
+  position: relative;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.btn:after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+/* Pseudo elements for icons */
+.btn:before {
+  font-family: 'FontAwesome';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* Icon separator */
+.btn-sep {
+  padding: 25px 60px 25px 120px;
+}
+
+.btn-sep:before {
+  background: rgba(0,0,0,0.15);
+}
+
+.btn-4 {
+  background: #34495e;
+  color: #fff;
+}
+
+.btn-4:hover {
+  background: #2c3e50;
+}
+
+.btn-4:active {
+  background: #2c3e50;
+  top: 2px;
+}
+
+.btn-4:before {
+  position: absolute;
+  height: 100%;
+  left: 0;
+  top: 0;
+  line-height: 3;
+  font-size: 140%;
+  width: 60px;
+}
+
+.icon-send:before {
+  content: "\f1d8";
+}
+
+.string{
+    color:white
+}
+</style>
+
+
+<a href="/" >
+    <h1 class="string"> HOMEPAGE </h1>
 </a>
 <form method ="GET" action = "{% url 'home' %}">
     <input type = "text" name ="q" placeholder="Search rooms..."/>
 
 </form>
 
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+
 {% if request.user.is_authenticated %}
+
     <p>Hello {{ request.user }}</p>
-    <a href = "{% url 'logout' %}">Logout</a>
+
+    <a class="string" href = "{% url 'logout' %}">Logout</a>
+    <a class="string" href = "{% url 'user-profile' request.user.id %}">
+         <button class="btn btn-4 btn-sep icon-send">Profile</button></a>
 {% else %}
-    <a href = "{%  url 'login' %}">Login</a>
+    <a class="string" href = "{%  url 'login' %}">Login</a>
 {% endif %}
 
 <hr>
