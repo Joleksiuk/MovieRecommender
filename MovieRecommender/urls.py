@@ -22,8 +22,9 @@ urlpatterns = [
 
     path('read-data/', views.readData, name='read-data'),
 
-    path('movie/<str:pk>', views.movie, name='movie'),
+    path('movie=<str:pk>', views.movie, name='movie'),
 
-    path('add-favourite/<str:pk>', views.addToFavourites, name='add-favourite')
+    path('add-favourite/<str:pk>', views.addToFavourites, name='add-favourite'),
 
+    path('rate-movie/', views.rate_movie, name='rate-movie')
 ]

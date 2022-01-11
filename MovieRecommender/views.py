@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import Room, Topic, Genre, Company, Movie, Profile
+from .models import Room, Topic, Genre, Company, Movie, Profile, Rating
 from .forms import RoomForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -12,6 +12,8 @@ from .models import Message
 import pandas as p
 from ast import literal_eval
 import random as rand
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
 
@@ -33,7 +35,10 @@ def movie(request, pk):
     for x in range(0, len(companies_dic)):
         companies.append(companies_dic[x]['name'])
 
-    context={'movie': movie, 'genres': genres, 'companies': companies}
+    try: rating = Rating.objects.get(movie = movie,user = request.user)
+    except: rating = 'Not rated'
+
+    context={'movie': movie, 'genres': genres, 'companies': companies, 'rating':rating}
     return render(request,"MovieRecommender/movie.html", context)
 
 
@@ -44,6 +49,41 @@ def get_api_value(movie_id, value):
     data = response_API.text
     parse_json = json.loads(str(data))
     return parse_json[value]
+
+@csrf_exempt
+def rate_movie(request):
+    data = json.loads(request.body)
+    movie_id = data['movie_id']
+    try:
+        movie = Movie.objects.get(id=movie_id)
+    except:
+        movie = None
+
+    rating_value = data['value']
+    user = request.user
+    print(data)
+    print('Movie: ', movie, " User: ", user, ' Rating: ', rating_value)
+
+    try:
+        rating = Rating.objects.get(user= user,movie=movie)
+    except:
+        rating = None
+
+    if rating is not None:
+        print('Updated')
+        rating.value=rating_value
+        rating.save()
+    else:
+        print('Created')
+        Rating.objects.create(
+            movie=movie,
+            value=rating_value,
+            user=user
+        )
+
+    response = HttpResponse(request)
+    response.status_code = 200
+    return response
 
 
 def get_movie_genres(movie_id):
@@ -61,6 +101,7 @@ def get_poster_url(movie_id):
     data=response_API.text
     parse_json = json.loads(str(data))
     return str(parse_json['poster_path'])
+
 
 
 def userProfile(request, pk):
@@ -100,24 +141,23 @@ def deleteMessage(request, pk):
 
 
 def readData(request):
+    df = p.read_csv('E:/PythonProjects/data/rate2.csv')
+    column_names = ['user_id', 'movie_id', 'rating']
+    data = df[column_names]
 
-    i = 0
+    for x in range(0, len(data)):
+        print(data.iloc[x]['user_id'], "", data.iloc[x]['movie_id'], "", data.iloc[x]['rating'])
 
-    for x in range(495,Movie.objects.all().count()):
-        movie = Movie.objects.get(id=x)
-        movie.poster_path = 'https://image.tmdb.org/t/p/original'+get_poster_url(movie.movie_id)
-        movie.title = get_api_value(movie.movie_id, 'title')
-
-        genres = get_api_value(movie.movie_id,'genres')
-        for x in genres:
-            movie.genres.add(Genre.objects.get(genre_id=x['id']))
-
-        i = i + 1
-        print(i)
-        #companies = get_api_value(movie.movie_id,'production_companies')
-        #for y in companies:
-        #    #movie.production_companies.add(Company.objects.get(company_id = y['id']))
-        #    print(y['id'], " ", y['name'])
+        if data.iloc[x]['user_id'] != 5 & data.iloc[x]['user_id'] != 6 & data.iloc[x]['user_id'] != 7:
+            user = User.objects.get(id=data.iloc[x]['user_id'])
+            movie = Movie.objects.get(id=data.iloc[x]['movie_id'])
+            value = data.iloc[x]['rating']
+            Rating.objects.create(
+                user=user,
+                movie=movie,
+                value=value
+            )
+        print(user,"",  movie, "",value)
 
 
     context = {}
