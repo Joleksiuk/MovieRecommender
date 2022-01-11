@@ -18,30 +18,6 @@ import requests
 import json
 
 
-def movie(request, pk):
-
-    movie = Movie.objects.get(id=pk)
-    poster_url = get_poster_url(movie.movie_id)
-    result = 'https://image.tmdb.org/t/p/original' + poster_url
-    movie.poster_path=result
-
-    genres_dic = get_api_value(movie.movie_id, 'genres')
-    genres =[]
-    for x in range(0, len(genres_dic)):
-        genres.append(genres_dic[x]['name'])
-
-    companies_dic = get_api_value(movie.movie_id, 'production_companies')
-    companies=[]
-    for x in range(0, len(companies_dic)):
-        companies.append(companies_dic[x]['name'])
-
-    try: rating = Rating.objects.get(movie = movie,user = request.user)
-    except: rating = 'Not rated'
-
-    context={'movie': movie, 'genres': genres, 'companies': companies, 'rating':rating}
-    return render(request,"MovieRecommender/movie.html", context)
-
-
 def get_api_value(movie_id, value):
     api = 'https://api.themoviedb.org/3/movie/' + str(
         movie_id) + '?api_key=4b5f9777a2d363363cbb7d26017f0052&language=en-US'
@@ -49,41 +25,6 @@ def get_api_value(movie_id, value):
     data = response_API.text
     parse_json = json.loads(str(data))
     return parse_json[value]
-
-@csrf_exempt
-def rate_movie(request):
-    data = json.loads(request.body)
-    movie_id = data['movie_id']
-    try:
-        movie = Movie.objects.get(id=movie_id)
-    except:
-        movie = None
-
-    rating_value = data['value']
-    user = request.user
-    print(data)
-    print('Movie: ', movie, " User: ", user, ' Rating: ', rating_value)
-
-    try:
-        rating = Rating.objects.get(user= user,movie=movie)
-    except:
-        rating = None
-
-    if rating is not None:
-        print('Updated')
-        rating.value=rating_value
-        rating.save()
-    else:
-        print('Created')
-        Rating.objects.create(
-            movie=movie,
-            value=rating_value,
-            user=user
-        )
-
-    response = HttpResponse(request)
-    response.status_code = 200
-    return response
 
 
 def get_movie_genres(movie_id):
@@ -102,28 +43,6 @@ def get_poster_url(movie_id):
     parse_json = json.loads(str(data))
     return str(parse_json['poster_path'])
 
-
-
-def userProfile(request, pk):
-    user = User.objects.get(id=pk)
-    profile = Profile.objects.get(user_id=user)
-    rooms = user.room_set.all()
-    room_messages = user.message_set.all()
-    topics = Topic.objects.all()
-    fav_movies = profile.fav_movies.all()
-    for x in fav_movies:
-        x.poster_path = 'https://image.tmdb.org/t/p/original' + get_poster_url(x.movie_id)
-    context = {'user': user, 'rooms': rooms, 'room_messages': room_messages, 'topics': topics, 'profile': profile, 'fav_movies': fav_movies}
-    return render(request, 'MovieRecommender/profile.html', context)
-
-
-def addToFavourites(request, pk):
-    print('siema ', pk)
-    movie = Movie.objects.get(movie_id=pk)
-    user = request.user
-    profile = Profile.objects.get(user_id=user)
-    profile.fav_movies.add(movie)
-    return redirect('movie', movie.id)
 
 
 @login_required(login_url='login')
@@ -146,7 +65,6 @@ def readData(request):
     data = df[column_names]
 
     for x in range(0, len(data)):
-        print(data.iloc[x]['user_id'], "", data.iloc[x]['movie_id'], "", data.iloc[x]['rating'])
 
         if data.iloc[x]['user_id'] != 5 & data.iloc[x]['user_id'] != 6 & data.iloc[x]['user_id'] != 7:
             user = User.objects.get(id=data.iloc[x]['user_id'])
@@ -157,8 +75,6 @@ def readData(request):
                 movie=movie,
                 value=value
             )
-        print(user,"",  movie, "",value)
-
 
     context = {}
     return render(request, 'MovieRecommender/read_data.html', context)

@@ -30,7 +30,7 @@
          {% for movie in fav_movies %}
             <div class = "movie-panel">
                 <h4>{{ movie.title }}</h4>
-                <a href="/movie/{{ movie.id }}"><img width = "200" height ="300" src="{{movie.poster_path}}"/></a>
+                <a href="/movie={{ movie.id }}"><img width = "200" height ="300" src="{{movie.poster_path}}"/></a>
             </div>
         {% endfor %}
     </div>

@@ -3,6 +3,8 @@ from . import views
 from . my_views import home_views
 from . my_views import login_views
 from . my_views import room_views
+from . my_views import movie_views
+from . my_views import profile_views
 
 urlpatterns = [
     path('login/', login_views.loginPage, name='login'),
@@ -11,7 +13,7 @@ urlpatterns = [
 
     path('', home_views.home, name='home'),
     path('room/<str:pk>', room_views.room, name='room'),
-    path('profile/<str:pk>', views.userProfile, name="user-profile"),
+    path('profile/<str:pk>', profile_views.userProfile, name="user-profile"),
 
     path('create-room/', room_views.createRoom, name="create-room"),
     path('update-room/<str:pk>', room_views.updateRoom, name="update-room"),
@@ -22,9 +24,8 @@ urlpatterns = [
 
     path('read-data/', views.readData, name='read-data'),
 
-    path('movie=<str:pk>', views.movie, name='movie'),
 
-    path('add-favourite/<str:pk>', views.addToFavourites, name='add-favourite'),
-
-    path('rate-movie/', views.rate_movie, name='rate-movie')
+    path('movie=<str:pk>',  movie_views.movie, name='movie'),
+    path('add-favourite/<str:pk>', movie_views.addToFavourites, name='add-favourite'),
+    path('rate-movie/', movie_views.rate_movie, name='rate-movie')
 ]
