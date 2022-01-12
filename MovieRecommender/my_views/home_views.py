@@ -18,16 +18,19 @@ def home(request):
     test = Movie.objects.filter(genres__name='Comedy')
 
     i=0
+    index = rand.randint(1, Movie.objects.all().count())
     while i <12:
-        index = rand.randint(1, 1000)
+
         movie = Movie.objects.get(id=index)
         poster_url = get_poster_url(movie.movie_id)
-        result = 'https://image.tmdb.org/t/p/original' + poster_url
 
-        if poster_url!='None':
+        if poster_url is not None:
+
+            result = 'https://image.tmdb.org/t/p/original' + str(poster_url)
             movie.poster_path = result
             i=i+1
             movies.append(movie)
+        index+=1
 
 
     context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'room_messages': room_messages,'movies': movies, "test": test}

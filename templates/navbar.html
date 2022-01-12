@@ -55,20 +55,20 @@ body {
 }
 
 .btn-sep:before {
-  background: rgba(0,0,0,0.15);
+  background: rgba(194, 42, 187, 0.6);
 }
 
 .btn-4 {
-  background: #34495e;
+  background: #634693;
   color: #fff;
 }
 
 .btn-4:hover {
-  background: #2c3e50;
+  background: #7f5ab3;
 }
 
 .btn-4:active {
-  background: #2c3e50;
+  background: #634693;
   top: 2px;
 }
 
@@ -89,6 +89,11 @@ body {
 .string{
     color:white
 }
+
+.front-buttons{
+    display: flex;
+    flex-wrap: wrap;
+}
 </style>
 
 
@@ -97,22 +102,35 @@ body {
 </a>
 <form method ="GET" action = "{% url 'home' %}">
     <input type = "text" name ="q" placeholder="Search rooms..."/>
-
 </form>
 
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 
-
-{% if request.user.is_authenticated %}
-
     <p>Hello {{ request.user }}</p>
 
-    <a class="string" href = "{% url 'logout' %}">Logout</a>
-    <a class="string" href = "{% url 'user-profile' request.user.id %}">
-         <button class="btn btn-4 btn-sep icon-send">Profile</button></a>
-{% else %}
-    <a class="string" href = "{%  url 'login' %}">Login</a>
-{% endif %}
+    <div class = "front-buttons">
+        {% if request.user.is_authenticated %}
+        <div><a class="string" href = "{% url 'logout' %}">
+         <button class="btn btn-4 btn-sep icon-send">Log out</button></a></div>
+        {% else %}
+         <div><a class="string" href = "{% url 'login' %}">
+         <button class="btn btn-4 btn-sep icon-send">Login</button></a></div>
+        {% endif %}
+
+        <div> <a class="string" href = "{% url 'user-profile' request.user.id %}">
+         <button class="btn btn-4 btn-sep icon-send">Profile</button></a> </div>
+
+        <div>  <a class="string" href = "{% url 'rating-recommendation' %}?q=%">
+         <button class="btn btn-4 btn-sep icon-send">Ratings Recommendation</button></a> </div>
+
+         <div>  <a class="string" href = "{% url 'home'  %}">
+         <button class="btn btn-4 btn-sep icon-send">Colaborative filtering</button></a> </div>
+
+        <div>  <a class="string" href = "{% url 'home'  %}">
+         <button class="btn btn-4 btn-sep icon-send">Search movie</button></a> </div>
+    </div>
+
+
 
 <hr>

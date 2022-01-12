@@ -1,0 +1,75 @@
+{%  extends 'main.html' %}
+{%  load static %}
+{%  block content  %}
+<style>
+    body{
+        color:white;
+        font-family: 'Lato';
+    }
+    .heh-container{
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+    }
+
+    .movie-container{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .movie-panel{
+        margin:20px;
+        margin-bottom: 100px;
+        width : 200px;
+        height :300px;
+    }
+
+    .sort-container{
+        display:flex;
+        flex-wrap: wrap;
+    }
+
+</style>
+
+
+    <h4> Sort by </h4>
+    <h4> Rating </h4>
+    <div class="sort-container">
+           <div>  <a class="string" href = "{% url 'rating-recommendation'%}?q={{ genre }}%wbest-rated" >
+               <button class="btn btn-4 btn-sep ">Best rated</button></a> </div>
+
+           <div>  <a class="string" href = "{% url 'rating-recommendation'%}?q={{ genre }}%worst-rated" >
+             <button class="btn btn-4 btn-sep ">Worst rated</button></a> </div>
+
+            <div>  <a class="string" href = "{% url 'rating-recommendation'%}?q={{ genre }}%most-ratings" >
+                 <button class="btn btn-4 btn-sep ">Most ratings</button></a> </div>
+
+            <div>  <a class="string" href = "{% url 'rating-recommendation'%}?q={{ genre }}%least-ratings" >
+                 <button class="btn btn-4 btn-sep ">Least ratings</button></a> </div>
+    </div>
+    <div class = "heh-container">
+        <div>
+            <H2>Genres : </H2>
+           <div>  <a class="string" href = "{% url 'rating-recommendation'%}?q=%{{order}}" >
+             <button class="btn btn-4 btn-sep "> All </button></a> </div>
+
+            {% for genre in genres %}
+
+                <div>  <a class="string" href = "{% url 'rating-recommendation'%}?q={{genre.name}}%{{ order }}" >
+                 <button class="btn btn-4 btn-sep ">{{genre}}</button></a> </div>
+
+            {% endfor %}
+        </div>
+
+        <div>
+            <div class = "movie-container">
+            {%  for movie in movies %}
+                <div class = "movie-panel">
+                     <h3>{{ movie.title }}</h3>
+                     <a href="/movie={{ movie.id }}"><img width = "200" height ="300" src="{{movie.poster_path}}"/></a>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+{% endblock content %}

@@ -41,7 +41,12 @@ def get_poster_url(movie_id):
     response_API = requests.get(api)
     data=response_API.text
     parse_json = json.loads(str(data))
-    return str(parse_json['poster_path'])
+    try:
+        pp = parse_json['poster_path']
+    except:
+        pp= None
+
+    return pp
 
 
 

@@ -1,6 +1,24 @@
 from MovieRecommender.views import *
 
 
+def get_trailer_link(movie_id):
+    base_url = "https://www.youtube.com/embed/"
+    api_path = "https://api.themoviedb.org/3/movie/"+str(movie_id)+"/videos?api_key=4b5f9777a2d363363cbb7d26017f0052&language=en-US"
+    response_API = requests.get(api_path)
+    data = response_API.text
+    parse_json = json.loads(data)
+
+    try:
+        video_code = parse_json['results'][0]['key']
+    except:
+        video_code = 'None'
+
+    if video_code != 'None':
+        path = base_url + video_code
+        return path
+    else:
+        return video_code
+
 def addToFavourites(request, pk):
 
     movie = Movie.objects.get(movie_id=pk)
@@ -17,6 +35,9 @@ def movie(request, pk):
     result = 'https://image.tmdb.org/t/p/original' + poster_url
     movie.poster_path=result
 
+    trailer = get_trailer_link(movie.movie_id)
+
+
     genres_dic = get_api_value(movie.movie_id, 'genres')
     genres =[]
     for x in range(0, len(genres_dic)):
@@ -30,7 +51,9 @@ def movie(request, pk):
     try: rating = Rating.objects.get(movie = movie,user = request.user)
     except: rating = 'Not rated'
 
-    context={'movie': movie, 'genres': genres, 'companies': companies, 'rating':rating}
+
+
+    context={'movie': movie, 'genres': genres, 'companies': companies, 'rating':rating, 'trailer': trailer}
     return render(request,"MovieRecommender/movie.html", context)
 
 
