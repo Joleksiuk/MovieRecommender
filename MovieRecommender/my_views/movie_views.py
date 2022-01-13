@@ -31,9 +31,14 @@ def addToFavourites(request, pk):
 
 def movie(request, pk):
     movie = Movie.objects.get(id=pk)
-    poster_url = get_poster_url(movie.movie_id)
-    result = 'https://image.tmdb.org/t/p/original' + poster_url
+    poster_url = str(get_poster_url(movie.movie_id))
+    if poster_url != 'None':
+        result = 'https://image.tmdb.org/t/p/original' + poster_url
+    else:
+        result = 'https://www.scifi-movies.com/images/site/en/affiche_nondisponible.jpg'
     movie.poster_path = result
+    print(result)
+    movie.save()
 
     trailer = get_trailer_link(movie.movie_id)
 

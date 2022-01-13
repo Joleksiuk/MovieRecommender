@@ -16,6 +16,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
+import sqlite3
 
 
 def get_api_value(movie_id, value):
@@ -65,43 +66,38 @@ def deleteMessage(request, pk):
 
 
 def readData(request):
-    df = p.read_csv('E:/PythonProjects/data/rate2.csv')
-    column_names = ['user_id', 'movie_id', 'rating']
-    data = df[column_names]
-
-    for x in range(0, len(data)):
-
-        if data.iloc[x]['user_id'] != 5 & data.iloc[x]['user_id'] != 6 & data.iloc[x]['user_id'] != 7:
-            user = User.objects.get(id=data.iloc[x]['user_id'])
-            movie = Movie.objects.get(id=data.iloc[x]['movie_id'])
-            value = data.iloc[x]['rating']
-            Rating.objects.create(
-                user=user,
-                movie=movie,
-                value=value
-            )
 
     context = {}
     return render(request, 'MovieRecommender/read_data.html', context)
 
 
+def convert_to_df(query_name):
+    dat = sqlite3.connect('db.sqlite3')
+    sql = 'SELECT * From '+query_name
+    query = dat.execute(sql)
+    cols = [column[0] for column in query.description]
+    df = p.DataFrame.from_records(data=query.fetchall(), columns=cols)
+    return df
+
+
 def load_profiles():
-    df = p.read_csv('E:/PythonProjects/data/names.csv')
-    column_names = ['name', 'lastname', 'email', 'birth_date', 'image_path', 'sex', 'password']
-    data = df
+    print(Movie.objects.all().count())
+    print(User.objects.all().count())
+    df = p.read_csv('E:/PythonProjects/data/fav_movies.csv')
+    column_names = ['user_id', 'movie_id']
+    data = df[column_names]
+
     for x in range(0, len(data)):
-        st = data.iloc[x]['name'] + " " + data.iloc[x]['lastname']
-        user = User.objects.get(username=st)
 
-        Profile.objects.create(
-            user_id=user,
-            name=user.username,
-            picture_path=data.iloc[x]['image_path'],
-            birth_date=data.iloc[x]['birth_date'],
-            sex=data.iloc[x]['sex']
-        )
+        try:
+            movie = Movie.objects.get(id=data.iloc[x]['movie_id'])
+            user = User.objects.get(id=data.iloc[x]['user_id'])
+            profile = Profile.objects.get(user_id=user)
+            profile.fav_movies.add(movie)
+            profile.save()
+            print(user, " ", movie)
+        except:
+            pass
 
-    print(data)
-    context = {'data': data}
 
 

@@ -22,14 +22,17 @@ def home(request):
     while i <12:
 
         movie = Movie.objects.get(id=index)
-        poster_url = get_poster_url(movie.movie_id)
+        poster_url = str(get_poster_url(movie.movie_id))
 
-        if poster_url is not None:
+        if poster_url != 'None':
+            result = 'https://image.tmdb.org/t/p/original' + poster_url
+        else:
+            result ='https://www.scifi-movies.com/images/site/en/affiche_nondisponible.jpg'
 
-            result = 'https://image.tmdb.org/t/p/original' + str(poster_url)
-            movie.poster_path = result
-            i=i+1
-            movies.append(movie)
+        movie.poster_path = result
+        movie.save()
+        i = i + 1
+        movies.append(movie)
         index+=1
 
 
