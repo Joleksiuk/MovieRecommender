@@ -19,6 +19,7 @@ import json
 import sqlite3
 
 
+
 def get_api_value(movie_id, value):
     api = 'https://api.themoviedb.org/3/movie/' + str(
         movie_id) + '?api_key=4b5f9777a2d363363cbb7d26017f0052&language=en-US'
@@ -65,10 +66,31 @@ def deleteMessage(request, pk):
     return render(request, 'MovieRecommender/delete.html', {'obj': message})
 
 
+
 def readData(request):
+
 
     context = {}
     return render(request, 'MovieRecommender/read_data.html', context)
+
+
+def get_top_rated_user_movies(num_of_movies,user_id):
+
+    sql = 'SELECT * From MovieRecommender_rating ' \
+          'WHERE user_id = ' + str(user_id)+' ORDER BY value DESC LIMIT '+str(num_of_movies)
+
+    movies =[]
+    for x in Movie.objects.raw(sql):
+        movies.append(x)
+    return movies
+
+
+def count_frequencies(arg_list):
+    result =[]
+    for i in set(arg_list):
+        duplicateFrequencies = {'user_id': i, 'count': arg_list.count(i)}
+        result.append(duplicateFrequencies)
+    return result
 
 
 def convert_to_df(query_name):
