@@ -10,18 +10,6 @@
         grid-template-columns: 1fr 3fr 1fr;
     }
 
-    .movie-container{
-        margin:20px;
-        display: flex;
-        flex-wrap: wrap;
-        align-content: center;
-    }
-
-    .movie-panel{
-        margin: 10px;
-        width:200px;
-        height:350px;
-    }
     </style>
 
 <div class="home-container">
@@ -33,13 +21,9 @@
     </div>
 
     <a href="{%  url 'read-data' %}">READ DATA</a>
-    <div class = "movie-container">
-        {%  for movie in movies %}
-            <div class = "movie-panel">
-                 <h3>{{ movie.title }}</h3>
-                 <a href="/movie={{ movie.id }}"><img width = "200" height ="300" src="{{movie.poster_path}}"/></a>
-            </div>
-        {% endfor %}
+
+    <div>
+        {%  include 'MovieRecommender/movies_component.html' %}
     </div>
 
     <div>

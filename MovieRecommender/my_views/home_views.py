@@ -16,25 +16,14 @@ def home(request):
     movies = []
 
     test = Movie.objects.filter(genres__name='Comedy')
-
     i=0
     index = rand.randint(1, Movie.objects.all().count())
-    while i <12:
+    while i < 12:
 
         movie = Movie.objects.get(id=index)
-        poster_url = str(get_poster_url(movie.movie_id))
-
-        if poster_url != 'None':
-            result = 'https://image.tmdb.org/t/p/original' + poster_url
-        else:
-            result ='https://www.scifi-movies.com/images/site/en/affiche_nondisponible.jpg'
-
-        movie.poster_path = result
-        movie.save()
         i = i + 1
         movies.append(movie)
-        index+=1
-
+        index += 1
 
     context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'room_messages': room_messages,'movies': movies, "test": test}
 

@@ -3,8 +3,11 @@ from MovieRecommender.views import *
 
 def collab_filter(request):
 
-    movies = recommend_movies_by_collaborative_filtering(request)
-    context = {"recommendation" : movies}
+    movies = list(recommend_movies_by_collaborative_filtering(request))
+    context = {"movies": movies}
+
+
+
     return render(request, 'MovieRecommender/collab_filtering.html', context)
 
 
