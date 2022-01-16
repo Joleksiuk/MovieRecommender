@@ -24,10 +24,10 @@ def rating_recommendation(request):
         sql = "SELECT m.id FROM MovieRecommender_movie as m " \
               "JOIN MovieRecommender_movie_genres as mg ON m.id = mg.movie_id " \
               "JOIN MovieRecommender_genre as g ON mg.genre_id = g.id " \
-              "WHERE g.name = '" + str(genre) + "' " + order_sql + " LIMIT 20 "
+              "WHERE g.name = '" + str(genre) + "' " + order_sql + " LIMIT 100 "
 
     if genre == "":
-        sql = "SELECT m.id FROM MovieRecommender_movie as m "+ order_sql + " LIMIT 5 "
+        sql = "SELECT m.id FROM MovieRecommender_movie as m "+ order_sql + " LIMIT 100 "
 
     movies = []
 

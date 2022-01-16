@@ -4,7 +4,7 @@ from MovieRecommender.views import *
 @login_required(login_url='login')
 def collab_filter(request):
 
-    movies = list(recommend_movies_by_collaborative_filtering(request))[0:10]
+    movies = list(recommend_movies_by_collaborative_filtering(request))[0:50]
     context = {"movies": movies}
 
     return render(request, 'MovieRecommender/collab_filtering.html', context)
@@ -32,7 +32,7 @@ def similiar_ratings_user(request):
     for x in result_list:
         df = df.append(x, ignore_index=True)
 
-    return df.head(5)
+    return df.head(10)
 
 
 def familiar_favourite_movies_users(request):
@@ -67,7 +67,7 @@ def sum_similarity_points(similar_ratings_df, df):
             df = df.append(row.to_dict(), ignore_index=True)
 
     df = df.sort_values(by=['count'], axis=0, ascending=False, inplace=False, kind='quicksort')
-    return df.head(5)['user_id'].values
+    return df.head(10)['user_id'].values
 
 
 def recommend_movies_by_collaborative_filtering(request):
@@ -75,9 +75,9 @@ def recommend_movies_by_collaborative_filtering(request):
     familiar_favourites_df = familiar_favourite_movies_users(request)
 
     users_list = sum_similarity_points(similar_ratings_df, familiar_favourites_df)
-    x = get_top_rated_user_movies(5, 1)
+    x = get_top_rated_user_movies(15, request.user.id)
 
-    movies_num = 10
+    movies_num = 20
     final_movie_list = []
     for x in range(0, len(users_list)):
         y = get_top_rated_user_movies(movies_num, users_list[x])

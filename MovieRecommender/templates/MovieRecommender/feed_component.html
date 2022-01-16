@@ -16,8 +16,7 @@
 {%  for room in rooms %}
         <div class="panel">
             {% if request.user == room.host %}
-                <a style="color:pink" href = "{% url 'update-room' room.id %}">
-                    <h1>Edit</h1></a>
+                <a style="color:pink" href = "{% url 'update-room' room.id %}">Edit</a>
                 <a style="color:pink"href = "{% url 'delete-room' room.id %}">Delete</a>
             {% endif %}
             <a style="color:cornflowerblue" href = "{%  url 'user-profile' room.host.id %}">

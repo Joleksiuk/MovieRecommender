@@ -33,22 +33,20 @@
     <div class="cont1">
         <div>
             <img class = "image" src="{%  static profile.picture_path  %}"/>
-             {% include 'MovieRecommender/topic_component.html' %}
+             {% include 'MovieRecommender/feed_component.html' %}
 
         </div>
 
         <div>
+            <h1>Favourite movies</h1>
             <div class="movie-container">
-                <h1>Favourite movies</h1>
+
                  {% for movie in fav_movies %}
                     <div class = "movie-panel">
                         <h4>{{ movie.title }}</h4>
                         <a href="/movie={{ movie.id }}"><img width = "200" height ="300" src="{{movie.poster_path}}"/></a>
                     </div>
                 {% endfor %}
-            </div>
-             <div>
-                {% include 'MovieRecommender/feed_component.html' %}
             </div>
         </div>
         <div>
