@@ -1,6 +1,5 @@
 <style>
 
-
 body {
     background-image: linear-gradient(130deg, #0e2d44, #41428b, #111a3d, #4f51a7, #607597);
     font-family: 'Lato';
@@ -27,7 +26,6 @@ body {
     -moz-transition: all 0.3s;
     transition: all 0.3s;
 }
-
 .btn:after {
   content: '';
   position: absolute;
@@ -36,8 +34,6 @@ body {
   -moz-transition: all 0.3s;
   transition: all 0.3s;
 }
-
-/* Pseudo elements for icons */
 .btn:before {
   font-family: 'FontAwesome';
   speak: none;
@@ -49,33 +45,25 @@ body {
   position: relative;
   -webkit-font-smoothing: antialiased;
 }
-
-
-/* Icon separator */
 .btn-sep {
     border-radius: 10px;
   padding: 25px 60px 25px 120px;
 }
-
 .btn-sep:before {
   background: rgba(194, 42, 187, 0.6);
 }
-
 .btn-4 {
     border-radius: 10px;
   background: #634693;
   color: #fff;
 }
-
 .btn-4:hover {
   background: #7f5ab3;
 }
-
 .btn-4:active {
   background: #634693;
   top: 2px;
 }
-
 .btn-4:before {
   position: absolute;
   height: 100%;
@@ -85,7 +73,6 @@ body {
   font-size: 140%;
   width: 60px;
 }
-
 .icon-send:before {
     border-radius: 10px;
   content: "\f1d8";
@@ -99,22 +86,27 @@ body {
     display: flex;
     flex-wrap: wrap;
 }
+
+
+
 </style>
-
-
-<a href="/" >
-    <h1 class="string">
-        <img src = 'https://see.fontimg.com/api/renderfont4/BWqOd/eyJyIjoiZnMiLCJoIjo0OSwidyI6MTAwMCwiZnMiOjQ5LCJmZ2MiOiIjQUM5MUNEIiwiYmdjIjoiI0ZGRkZGRiIsInQiOjF9/TW92aWUgUmVjb21tZW5kZXI/robus.png'/>
-    </h1>
-</a>
-<form method ="GET" action = "{% url 'search' %}">
-    <input type = "text" name ="q" placeholder="Search rooms..."/>
-</form>
+<div>
+    <a href="/" >
+        <h1 class="string">
+            <img src = 'https://see.fontimg.com/api/renderfont4/BWqOd/eyJyIjoiZnMiLCJoIjo0OSwidyI6MTAwMCwiZnMiOjQ5LCJmZ2MiOiIjQUM5MUNEIiwiYmdjIjoiI0ZGRkZGRiIsInQiOjF9/TW92aWUgUmVjb21tZW5kZXI/robus.png'/>
+        </h1>
+    </a>
+</div>
+<div>
+    <form method ="GET" action = "{% url 'search' %}">
+        <input type = "text" name ="q" placeholder="Search rooms..."/>
+    </form>
+</div>
 
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 
-    <p>Hello {{ request.user }}</p>
+    <h1>You are logged as {{ request.user }}</h1>
 
     <div class = "front-buttons">
         {% if request.user.is_authenticated %}
@@ -129,7 +121,7 @@ body {
          <button class="btn btn-4 btn-sep icon-send">Profile</button></a> </div>
 
         <div>  <a class="string" href = "{% url 'rating-recommendation' %}?q=%">
-         <button class="btn btn-4 btn-sep icon-send">Ratings Recommendation</button></a> </div>
+         <button class="btn btn-4 btn-sep icon-send">Ratings Order</button></a> </div>
 
          <div>  <a class="string" href = "{% url 'collab_filtering'  %}">
          <button class="btn btn-4 btn-sep icon-send">Colaborative filtering</button></a> </div>

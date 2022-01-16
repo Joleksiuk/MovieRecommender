@@ -10,6 +10,9 @@
         width:200px;
         height:350px;
     }
+    .actor-image{
+        border-radius: 10px;
+    }
 </style>
 
 <div class ="main-container">
@@ -17,7 +20,7 @@
     <div class = "actor-panel">
          <h3>{{ actor.name }}</h3>
          <h4>{{ actor.character }}</h4>
-         <a href="/actor={{ actor.actor_id }}"><img width = "140" height ="200" src="{{actor.profile_path}}"/></a>
+         <a href="/actor={{ actor.actor_id }}"><img class = "actor-image" width = "140" height ="200" src="{{actor.profile_path}}"/></a>
     </div>
 {%  endfor%}
 </div>

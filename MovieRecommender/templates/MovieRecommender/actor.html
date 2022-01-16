@@ -2,14 +2,33 @@
 
 {%  block content %}
 
-    <h1>{{ actor.name }}</h1>
-    <h3>Biography: {{ actor.biography }}</h3>
-    <a href="/actor={{ actor.actor_id }}"><img width = "200" height ="300" src="{{actor.profile_path}}"/></a>
-    <h3>Popularity: {{ actor.popularity }}</h3>
-    <h3>Birth date: {{ actor.birthday }}</h3>
-    <h3>Known from movies: </h3>
-    <div>
-        {%  include 'MovieRecommender/movies_component.html' %}
+
+    <style>
+
+    .main-container{
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+
+    }
+    .container{
+        margin: 10px auto;
+        width: 50%;
+        padding: 10px;
+    }
+    </style>
+
+    <div class="main-container">
+        <div class="container">
+            <h1>{{ actor.name }}</h1>
+            <h3>Biography: {{ actor.biography }}</h3>
+            <a href="/actor={{ actor.actor_id }}"><img width = "200" height ="300" src="{{actor.profile_path}}"/></a>
+            <h3>Popularity: {{ actor.popularity }}</h3>
+            <h3>Birth date: {{ actor.birthday }}</h3>
+            <h3>Known from movies: </h3>
+        </div>
+        <div>
+            {%  include 'MovieRecommender/movies_component.html' %}
+        </div>
     </div>
 
 {% endblock content %}

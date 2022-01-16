@@ -1,3 +1,6 @@
+import datetime
+
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -93,13 +96,9 @@ class Movie(models.Model):
 class Profile(models.Model):
     user_id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     name = models.CharField(max_length=200, default="")
-    picture_path = models.CharField(max_length=200)
+    picture_path = models.CharField(max_length=200, default="https://upload.wikimedia.org/wikipedia/commons/1/1e/Default-avatar.jpg")
     fav_movies = models.ManyToManyField(Movie, related_name="fav_movies", blank=True)
-    birth_date = models.DateField(default=None)
     sex = models.CharField(max_length=200, default="")
-
-    # fav_actors
-    # fav_genres
 
     def __str__(self):
         return self.name

@@ -7,7 +7,7 @@
 
     .home-container{
         display:grid;
-        grid-template-columns: 1fr 1fr 2fr 1fr;
+        grid-template-columns: 1fr 1fr 3fr 1fr;
     }
     .grid-panel{
         margin:20px;
@@ -16,8 +16,11 @@
 
 <div class="home-container">
     <div class="grid-panel">
-        <h5>{{ room_count }} rooms available</h5>
-        <a href = "{% url 'create-room'  %}">Create Room</a>
+        <h2> Browse Topics</h2>
+        <hr>
+        <h4>{{ room_count }} rooms available</h4>
+        <a href = "{% url 'create-room'  %}">
+            <h4 style="color:darkseagreen">Create Room</h4></a>
         {%  include 'MovieRecommender/topic_component.html' %}
     </div>
 
@@ -31,10 +34,12 @@
     <!--<a href="{%  url 'read-data' %}">READ DATA</a>-->
 
     <div class="grid-panel">
+        <h2> Random Movies</h2>
         {%  include 'MovieRecommender/movies_component.html' %}
     </div>
 
     <div class="grid-panel">
+         <h2> Recent activity</h2>
         {%  include 'MovieRecommender/activity_component.html' %}
     </div>
 

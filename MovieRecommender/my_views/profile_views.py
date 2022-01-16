@@ -2,7 +2,11 @@ from MovieRecommender.views import *
 
 
 def userProfile(request, pk):
-    user = User.objects.get(id=pk)
+    try:
+        user = User.objects.get(id=pk)
+    except:
+        print('User does not exist')
+
     profile = Profile.objects.get(user_id=user)
     rooms = user.room_set.all()
     room_messages = user.message_set.all()

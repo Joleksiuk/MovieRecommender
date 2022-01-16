@@ -3,10 +3,6 @@
 
 {% block content %}
 <style>
-    .profile-container{
-        display: grid;
-        grid-template-columns: 1fr 3fr 1fr;
-    }
 
     .movie-container{
         margin:20px;
@@ -21,33 +17,43 @@
         height:350px;
     }
 
+    .cont1{
+        display: grid;
+        grid-template-columns: 1fr 4fr 1fr;
+    }
+    .image{
+        width: 400px;
+        height: 300px;
+        margin: 20px;
+        border-radius: 20px;
+    }
+
 </style>
-
-    <img src="{%  static profile.picture_path  %}"/>
     <h1>{{ user.username }}</h1>
-        <h1>Favourite movies</h1>
-    <div class="movie-container">
-         {% for movie in fav_movies %}
-            <div class = "movie-panel">
-                <h4>{{ movie.title }}</h4>
-                <a href="/movie={{ movie.id }}"><img width = "200" height ="300" src="{{movie.poster_path}}"/></a>
+    <div class="cont1">
+        <div>
+            <img class = "image" src="{%  static profile.picture_path  %}"/>
+             {% include 'MovieRecommender/topic_component.html' %}
+
+        </div>
+
+        <div>
+            <div class="movie-container">
+                <h1>Favourite movies</h1>
+                 {% for movie in fav_movies %}
+                    <div class = "movie-panel">
+                        <h4>{{ movie.title }}</h4>
+                        <a href="/movie={{ movie.id }}"><img width = "200" height ="300" src="{{movie.poster_path}}"/></a>
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
-    </div>
-
-    <div class = "profile-container">
-        <div>
-            {% include 'MovieRecommender/topic_component.html' %}
+             <div>
+                {% include 'MovieRecommender/feed_component.html' %}
+            </div>
         </div>
-
-        <div>
-            {% include 'MovieRecommender/feed_component.html' %}
-        </div>
-
         <div>
             {% include 'MovieRecommender/activity_component.html' %}
         </div>
     </div>
-
 
 {% endblock content %}

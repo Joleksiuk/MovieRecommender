@@ -28,7 +28,11 @@ def home(request):
                 movies.append(movie)
 
         index += 1
+    profiles = []
+    for x in rooms:
+        pro = Profile.objects.get(user_id=x.host)
+        profiles.append(pro)
 
-    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'room_messages': room_messages,'movies': movies}
+    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'room_messages': room_messages,'movies': movies, 'profiles':profiles}
 
     return render(request, 'MovieRecommender/home.html', context)
