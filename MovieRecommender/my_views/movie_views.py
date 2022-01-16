@@ -29,36 +29,55 @@ def addToFavourites(request, pk):
     return redirect('movie', movie.id)
 
 
+
+
+def get_similar_movies(request, pk):
+    api_path = 'https://api.themoviedb.org/3/movie/'+str(pk)+'/similar?api_key=4b5f9777a2d363363cbb7d26017f0052&language=en-US&page=1'
+    response_API = requests.get(api_path)
+    api_text = response_API.text
+    data = json.loads(api_text)
+
+    movies = []
+    for x in range(0, len(data['results'])):
+        movie = get_movie_from_API(data['results'][x]['id'])
+        movies.append(movie)
+
+    movie = Movie.objects.filter(movie_id=pk).values()[0]
+
+    context={'movies':movies, 'movie':movie}
+    return render(request, "MovieRecommender/similar_movies.html", context)
+
+
 def movie(request, pk):
-    movie = Movie.objects.get(id=pk)
-    poster_url = str(get_poster_url(movie.movie_id))
-    if poster_url != 'None':
-        result = 'https://image.tmdb.org/t/p/original' + poster_url
-    else:
-        result = 'https://www.scifi-movies.com/images/site/en/affiche_nondisponible.jpg'
-    movie.poster_path = result
-    print(result)
-    movie.save()
-
-    trailer = get_trailer_link(movie.movie_id)
-
-    genres_dic = get_api_value(movie.movie_id, 'genres')
-    genres = []
-    for x in range(0, len(genres_dic)):
-        genres.append(genres_dic[x]['name'])
-
-    companies_dic = get_api_value(movie.movie_id, 'production_companies')
-    companies = []
-    for x in range(0, len(companies_dic)):
-        companies.append(companies_dic[x]['name'])
 
     try:
-        user_rating = Rating.objects.get(movie=movie, user=request.user)
+        movie = Movie.objects.get(id = pk)
     except:
-        user_rating = 'Not rated'
+        movie = get_movie_from_API(pk)
 
-    context = {'movie': movie, 'genres': genres, 'companies': companies, 'user_rating': user_rating, 'trailer': trailer}
-    return render(request, "MovieRecommender/movie.html", context)
+    if movie is not None:
+        genres=[]
+        genres_obj = movie.genres.values()
+        for x in range(0, len(genres_obj)):
+            genres.append(genres_obj[x])
+
+        #companies = movie.production_companies.values()
+        try:
+            user_rating = Rating.objects.get(movie=movie, user=request.user)
+        except:
+            user_rating = 'Not rated'
+
+        trailer = get_trailer_link(movie.movie_id)
+
+        cast = get_cast_from_API(movie.movie_id)
+        print(cast)
+
+        context = {'movie': movie,'user_rating': user_rating, 'trailer': trailer, 'actors': cast}
+        return render(request, "MovieRecommender/movie.html", context)
+    else:
+        return redirect('home')
+
+
 
 
 @csrf_exempt
@@ -68,7 +87,8 @@ def rate_movie(request):
     try:
         movie = Movie.objects.get(id=movie_id)
     except:
-        movie = None
+        movie = Movie.objects.create(get_movie_from_API(movie_id))
+        movie.save()
 
     new_rating = data['value']
     user = request.user

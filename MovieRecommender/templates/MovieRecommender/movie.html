@@ -17,6 +17,7 @@
         <a href="/movie={{ movie.id }}"><img width = "200" height ="300" src="{{movie.poster_path}}"/></a>
         <h4>Overview : {{ movie.overview }}</h4>
 
+        <a href="/similar-movie-to/{{ movie.movie_id }}">SIMILAR MOVIES</a>
 
         <div>
             {%  include 'MovieRecommender/rating_form.html' %}
@@ -47,6 +48,11 @@
                 src={{ trailer }}>
             </iframe>
         {%  endif %}
+
+
+        <div>
+            {%  include 'MovieRecommender/cast_component.html' %}
+        </div>
     </div>
 
 {% endblock content %}

@@ -1,0 +1,15 @@
+{%  extends 'main.html' %}
+
+{%  block content %}
+
+    <h1>{{ actor.name }}</h1>
+    <h3>Biography: {{ actor.biography }}</h3>
+    <a href="/actor={{ actor.actor_id }}"><img width = "200" height ="300" src="{{actor.profile_path}}"/></a>
+    <h3>Popularity: {{ actor.popularity }}</h3>
+    <h3>Birth date: {{ actor.birthday }}</h3>
+    <h3>Known from movies: </h3>
+    <div>
+        {%  include 'MovieRecommender/movies_component.html' %}
+    </div>
+
+{% endblock content %}

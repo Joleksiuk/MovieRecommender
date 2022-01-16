@@ -80,7 +80,7 @@ class Movie(models.Model):
 
     org_language = models.CharField(max_length=200, default="")
     popularity = models.FloatField(default=0.0)
-    poster_path = models.CharField(max_length=200, default="")
+    poster_path = models.CharField(max_length=200, default="https://www.scifi-movies.com/images/site/en/affiche_nondisponible.jpg")
     release_date = models.CharField(max_length=200, default="")
     video = models.CharField(max_length=200, default="")
     vote_average = models.FloatField(default=0.0)
@@ -115,3 +115,18 @@ class Rating(models.Model):
 
     def __str__(self):
         return str(self.value)
+
+
+class Actor(models.Model):
+    actor_id=models.IntegerField(default=0.0)
+    name = models.CharField(max_length=200, default="")
+    role = models.CharField(max_length=200, default="")
+    character = models.CharField(max_length=200, default="")
+    biography = models.TextField(null=True, blank=True)
+    birthday = models.CharField(max_length=200, default="")
+    profile_path = models.CharField(max_length=200, default="https://davinci22.ru/wp-content/uploads/2014/01/default"
+                                                            "-avatar-m_1920.png")
+    popularity = models.IntegerField(default=0.0)
+
+    def __str__(self):
+        return str(self.name)

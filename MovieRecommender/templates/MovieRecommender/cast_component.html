@@ -1,0 +1,23 @@
+<style>
+    .main-container{
+        margin:20px;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+    }
+    .actor-panel{
+        margin: 10px;
+        width:200px;
+        height:350px;
+    }
+</style>
+
+<div class ="main-container">
+    {% for actor in actors %}
+    <div class = "actor-panel">
+         <h3>{{ actor.name }}</h3>
+         <h4>{{ actor.character }}</h4>
+         <a href="/actor={{ actor.actor_id }}"><img width = "140" height ="200" src="{{actor.profile_path}}"/></a>
+    </div>
+{%  endfor%}
+</div>

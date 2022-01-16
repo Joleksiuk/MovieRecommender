@@ -1,5 +1,4 @@
 from MovieRecommender.views import *
-from .movie_views import get_poster_url
 
 
 def rating_recommendation(request):
@@ -25,19 +24,14 @@ def rating_recommendation(request):
               "JOIN MovieRecommender_genre as g ON mg.genre_id = g.id " \
               "WHERE g.name = '" + str(genre) + "' " + order_sql + " LIMIT 20 "
 
-    if genre=="":
+    if genre == "":
         sql = "SELECT m.id FROM MovieRecommender_movie as m "+ order_sql + " LIMIT 5 "
 
     movies = []
 
     for m in Movie.objects.raw(sql):
         movie = m
-        poster_url = get_poster_url(movie.movie_id)
-        if poster_url is not None:
-
-            result = 'https://image.tmdb.org/t/p/original' + str(poster_url)
-            movie.poster_path = result
-            movies.append(movie)
+        movies.append(movie)
 
     genres = Genre.objects.all()
     context = {'genres': genres, 'movies': movies, 'genre': genre, 'order': order}

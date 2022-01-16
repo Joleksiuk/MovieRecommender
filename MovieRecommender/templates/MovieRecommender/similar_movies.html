@@ -1,0 +1,15 @@
+{%  extends 'main.html' %}
+
+{% block content %}
+<style>
+</style>
+
+
+    <h1>{{ movie.title }}</h1>
+    <a href="/movie={{ movie.id }}"><img width = "200" height ="300" src="{{movie.poster_path}}"/></a>
+
+    <h1> Similar Movies to : </h1>
+
+    {% include "MovieRecommender/movies_component.html" %}
+
+{%  endblock content %}

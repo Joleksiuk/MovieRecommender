@@ -14,17 +14,15 @@ def home(request):
     room_messages = Message.objects.filter(Q(room__name__icontains=q))
 
     movies = []
-
-    test = Movie.objects.filter(genres__name='Comedy')
     i=0
     index = rand.randint(1, Movie.objects.all().count())
-    while i < 12:
+    while i < 100:
 
         movie = Movie.objects.get(id=index)
         i = i + 1
         movies.append(movie)
         index += 1
 
-    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'room_messages': room_messages,'movies': movies, "test": test}
+    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'room_messages': room_messages,'movies': movies}
 
     return render(request, 'MovieRecommender/home.html', context)

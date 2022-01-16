@@ -3,9 +3,8 @@ from MovieRecommender.views import *
 
 def collab_filter(request):
 
-    movies = list(recommend_movies_by_collaborative_filtering(request))
+    movies = list(recommend_movies_by_collaborative_filtering(request))[0:10]
     context = {"movies": movies}
-
 
 
     return render(request, 'MovieRecommender/collab_filtering.html', context)
@@ -29,13 +28,11 @@ def similiar_ratings_user(request):
             common_ratings_users.append(x.id)
 
     result_list = count_frequencies(common_ratings_users)
-    print(result_list)
     df = p.DataFrame(columns=['user_id', 'count'])
     for x in result_list:
         df = df.append(x, ignore_index=True)
 
-
-    return df
+    return df.head(5)
 
 
 def familiar_favourite_movies_users(request):
@@ -46,16 +43,14 @@ def familiar_favourite_movies_users(request):
     columns = ['user_id', 'count']
     df = p.DataFrame(columns=columns)
 
-    for x in range(1, User.objects.all().count()):
-        try:
-            element = {}
-            other_fav_movies = Profile.objects.filter(user_id=User.objects.get(id=x)).values_list('fav_movies',
-                                                                                                  flat=True)
-            element['user_id'] = x
-            element['count'] = fav_movies.intersection(other_fav_movies).count()
-            df = df.append(element, ignore_index=True)
-        except:
-            print('Error: There is no user with id ', x)
+    for x in range(8, User.objects.all().count()):
+
+        element = {}
+        other_fav_movies = Profile.objects.filter(user_id=User.objects.get(id=x)).values_list('fav_movies',
+                                                                                              flat=True)
+        element['user_id'] = x
+        element['count'] = fav_movies.intersection(other_fav_movies).count()
+        df = df.append(element, ignore_index=True)
 
     df = df.sort_values(by=['count'], axis=0, ascending=False, inplace=False, kind='quicksort')
     return df.head(100).tail(99)
@@ -72,7 +67,7 @@ def sum_similarity_points(similar_ratings_df, df):
             df = df.append(row.to_dict(), ignore_index=True)
 
     df = df.sort_values(by=['count'], axis=0, ascending=False, inplace=False, kind='quicksort')
-    return df.head(10)['user_id'].values
+    return df.head(5)['user_id'].values
 
 
 def recommend_movies_by_collaborative_filtering(request):

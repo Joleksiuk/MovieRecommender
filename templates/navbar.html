@@ -100,7 +100,7 @@ body {
 <a href="/" >
     <h1 class="string"> HOMEPAGE </h1>
 </a>
-<form method ="GET" action = "{% url 'home' %}">
+<form method ="GET" action = "{% url 'search' %}">
     <input type = "text" name ="q" placeholder="Search rooms..."/>
 </form>
 
@@ -126,11 +126,6 @@ body {
 
          <div>  <a class="string" href = "{% url 'collab_filtering'  %}">
          <button class="btn btn-4 btn-sep icon-send">Colaborative filtering</button></a> </div>
-
-        <div>  <a class="string" href = "{% url 'home'  %}">
-         <button class="btn btn-4 btn-sep icon-send">Search movie</button></a> </div>
     </div>
-
-
 
 <hr>

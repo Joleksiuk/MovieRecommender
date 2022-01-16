@@ -1,0 +1,44 @@
+{%  extends 'main.html' %}
+{%  load static %}
+
+{%  block content  %}
+<style>
+    .main-container{
+        display:grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+</style>
+
+
+    <div class="main-container">
+         <div>
+            <h1>Forum Topics</h1>
+                 <div>
+                    {%  include 'MovieRecommender/topic_component.html' %}
+                    {%  include 'MovieRecommender/feed_component.html' %}
+                </div>
+
+        </div>
+
+        <div>
+            <h1>Movies</h1>
+             {%  include 'MovieRecommender/movies_component.html' %}
+        </div>
+
+        <div>
+            <h1>Profiles</h1>
+            {% for profile in profiles %}
+                <h4>{{ profile }}</h4>
+            {% endfor %}
+        </div>
+
+         <div>
+            <h1>Actors</h1>
+             {%  include 'MovieRecommender/cast_component.html' %}
+         </div>
+
+    </div>
+
+
+
+{% endblock content %}

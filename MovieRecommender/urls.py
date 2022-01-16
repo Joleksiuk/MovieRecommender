@@ -7,6 +7,8 @@ from . my_views import movie_views
 from . my_views import profile_views
 from . my_views import recommendation_views
 from . my_views import collab_filtering_views
+from . my_views import  search
+from . my_views import  actor_views
 
 urlpatterns = [
     path('login/', login_views.loginPage, name='login'),
@@ -32,5 +34,9 @@ urlpatterns = [
     path('rate-movie/', movie_views.rate_movie, name='rate-movie'),
     path('rating-recommendation/', recommendation_views.rating_recommendation, name='rating-recommendation'),
 
-    path('collab-filtering/',collab_filtering_views.collab_filter, name='collab_filtering' )
+    path('collab-filtering/',collab_filtering_views.collab_filter, name='collab_filtering'),
+
+    path('search/', search.search, name='search'),
+    path('actor=<str:pk>', actor_views.actor_profile, name='actor-profile'),
+    path('similar-movie-to/<str:pk>', movie_views.get_similar_movies, name='similar-movies')
 ]
