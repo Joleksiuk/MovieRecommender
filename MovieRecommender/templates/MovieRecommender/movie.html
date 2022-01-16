@@ -10,7 +10,6 @@
 
 .ac-footer .ac-footer-brand:hover .ac-icon-love-dark{background:url("https://community.algolia.com/places/images/svg/icon-heart-light-fc92b1e0.svg") no-repeat center center/contain}
 
-
 </style>
     <div>
         <h1>{{ movie.title }}</h1>
@@ -28,12 +27,8 @@
 
         <h4>Genres: </h4>
             {% for genre in genres %}
-                <h4>    {{ genre }}</h4>
+                <h4>    {{ genre.name }}</h4>
             {% endfor %}
-        <h4>Companies: </h4>
-        {% for company in companies %}
-            <h4>    {{ company }}</h4>
-        {% endfor %}
 
         <section class="ac-footer">
             <a href = "{% url 'add-favourite' movie.movie_id %}">

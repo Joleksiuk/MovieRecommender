@@ -16,11 +16,17 @@ def home(request):
     movies = []
     i=0
     index = rand.randint(1, Movie.objects.all().count())
-    while i < 100:
+    while i < 12:
 
-        movie = Movie.objects.get(id=index)
+        try:
+            movie = Movie.objects.get(id=index)
+        except:
+            movie = get_movie_from_API(index)
         i = i + 1
-        movies.append(movie)
+        if movie is not None:
+            if movie.adults != 'True':
+                movies.append(movie)
+
         index += 1
 
     context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'room_messages': room_messages,'movies': movies}

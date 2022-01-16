@@ -5,15 +5,37 @@
     .topic{
         color: white;
     }
+    .topic-panel{
+        margin:10px;
+        background-color: #312250;
+        border-radius: 20px;
+        height:40px;
+        text-align: left;
+    }
+    .text{
+        margin:20px;
+    }
 
 </style>
 <h3> Browse Topics</h3>
 <hr>
 <div>
-    <a class = "topic" href="{% url 'home'  %}">All</a>
+    <a class = "topic" href="{% url 'home'  %}">
+        <div class = 'topic-panel'>
+            <div class = "text">
+                All
+            </div>
+        </div>
+    </a>
 </div>
 {% for topic in topics %}
-    <div>
-        <a class = "topic" href="{% url 'home'  %}?q={{ topic.name }}">{{ topic.name }}</a>
-    </div>
+
+        <a class = "topic" href="{% url 'home'  %}?q={{ topic.name }}">
+              <div class = 'topic-panel'>
+                  <div class="text">
+                      {{ topic.name }}
+                  </div>
+              </div>
+        </a>
+
 {%  endfor %}

@@ -21,14 +21,34 @@ def get_trailer_link(movie_id):
         return video_code
 
 
+def trending_movies(request):
+    api_path = 'https://api.themoviedb.org/3/trending/movie/day?api_key=4b5f9777a2d363363cbb7d26017f0052'
+    response_API = requests.get(api_path)
+    api_text = response_API.text
+    data = json.loads(api_text)
+
+    movies = []
+    for x in range(0, len(data['results'])):
+        movie = get_movie_from_API(data['results'][x]['id'])
+        movies.append(movie)
+
+    context = {'movies':movies}
+    return render(request, 'MovieRecommender/trending.html', context)
+
+
 def addToFavourites(request, pk):
     movie = Movie.objects.get(movie_id=pk)
     user = request.user
     profile = Profile.objects.get(user_id=user)
-    profile.fav_movies.add(movie)
+    try:
+        profile.fav_movies.get(id =movie.id)
+        profile.fav_movies.remove(movie)
+    except:
+        profile.fav_movies.add(movie)
+
+    profile.save()
+
     return redirect('movie', movie.id)
-
-
 
 
 def get_similar_movies(request, pk):
@@ -42,7 +62,7 @@ def get_similar_movies(request, pk):
         movie = get_movie_from_API(data['results'][x]['id'])
         movies.append(movie)
 
-    movie = Movie.objects.filter(movie_id=pk).values()[0]
+    movie = get_movie_from_API(pk)
 
     context={'movies':movies, 'movie':movie}
     return render(request, "MovieRecommender/similar_movies.html", context)
@@ -52,27 +72,20 @@ def movie(request, pk):
 
     try:
         movie = Movie.objects.get(id = pk)
+        genres = movie.genres
     except:
         movie = get_movie_from_API(pk)
 
     if movie is not None:
-        genres=[]
-        genres_obj = movie.genres.values()
-        for x in range(0, len(genres_obj)):
-            genres.append(genres_obj[x])
-
-        #companies = movie.production_companies.values()
         try:
             user_rating = Rating.objects.get(movie=movie, user=request.user)
         except:
             user_rating = 'Not rated'
 
         trailer = get_trailer_link(movie.movie_id)
-
         cast = get_cast_from_API(movie.movie_id)
-        print(cast)
-
-        context = {'movie': movie,'user_rating': user_rating, 'trailer': trailer, 'actors': cast}
+        genres = movie.genres.values()
+        context = {'movie': movie,'user_rating': user_rating, 'trailer': trailer, 'actors': cast, "genres":genres}
         return render(request, "MovieRecommender/movie.html", context)
     else:
         return redirect('home')
@@ -92,8 +105,6 @@ def rate_movie(request):
 
     new_rating = data['value']
     user = request.user
-    print(data)
-    print('Movie: ', movie, " User: ", user, ' Rating: ', new_rating)
 
     try:
         rating = Rating.objects.get(user=user, movie=movie)

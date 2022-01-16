@@ -5,8 +5,10 @@ def rating_recommendation(request):
 
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
-    ordering_dic = {'worst-rated': 'ORDER BY vote_average ASC', 'wbest-rated': 'ORDER BY vote_average DESC',
-                    'most-ratings': 'ORDER BY vote_count DESC', 'least-ratings': 'ORDER BY vote_count ASC'}
+    ordering_dic = {'worst-rated': 'ORDER BY vote_average ASC, vote_count DESC',
+                    'wbest-rated': 'ORDER BY vote_average DESC, vote_count DESC',
+                    'most-ratings': 'ORDER BY vote_count DESC',
+                    'least-ratings': 'ORDER BY vote_count ASC'}
 
     arg_list = q.split("%")
     genre = arg_list[0]

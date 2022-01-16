@@ -1,11 +1,11 @@
 from MovieRecommender.views import *
 
 
+@login_required(login_url='login')
 def collab_filter(request):
 
     movies = list(recommend_movies_by_collaborative_filtering(request))[0:10]
     context = {"movies": movies}
-
 
     return render(request, 'MovieRecommender/collab_filtering.html', context)
 

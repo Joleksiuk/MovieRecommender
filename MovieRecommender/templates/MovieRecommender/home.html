@@ -7,26 +7,34 @@
 
     .home-container{
         display:grid;
-        grid-template-columns: 1fr 3fr 1fr;
+        grid-template-columns: 1fr 1fr 2fr 1fr;
     }
-
+    .grid-panel{
+        margin:20px;
+    }
     </style>
 
 <div class="home-container">
-    <div>
-     {%  include 'MovieRecommender/topic_component.html' %}
+    <div class="grid-panel">
         <h5>{{ room_count }} rooms available</h5>
         <a href = "{% url 'create-room'  %}">Create Room</a>
-        {%  include 'MovieRecommender/feed_component.html' %}
+        {%  include 'MovieRecommender/topic_component.html' %}
+    </div>
+
+    <div class="grid-panel"><h2> Discussions :</h2>
+        <br>
+        <br>
+        <br>
+         {%  include 'MovieRecommender/feed_component.html' %}
     </div>
 
     <!--<a href="{%  url 'read-data' %}">READ DATA</a>-->
 
-    <div>
+    <div class="grid-panel">
         {%  include 'MovieRecommender/movies_component.html' %}
     </div>
 
-    <div>
+    <div class="grid-panel">
         {%  include 'MovieRecommender/activity_component.html' %}
     </div>
 

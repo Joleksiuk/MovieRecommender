@@ -54,9 +54,6 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
 
-    class Meta:
-        unique_together = (("genre_id", "name"),)
-
 
 class Company(models.Model):
     company_id = models.IntegerField()
@@ -76,7 +73,6 @@ class Movie(models.Model):
     budget = models.FloatField(default=0.0)
 
     genres = models.ManyToManyField(Genre, related_name="genres", blank=True)
-    production_companies = models.ManyToManyField(Company, related_name="companies", blank=True)
 
     org_language = models.CharField(max_length=200, default="")
     popularity = models.FloatField(default=0.0)
@@ -85,6 +81,7 @@ class Movie(models.Model):
     video = models.CharField(max_length=200, default="")
     vote_average = models.FloatField(default=0.0)
     vote_count = models.IntegerField(default=0)
+    adults = models.CharField(max_length=200, default="False")
 
     def __str__(self):
         return self.title

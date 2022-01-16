@@ -126,27 +126,18 @@ def get_movie_from_API(movie_id):
         else:
             full_path = 'https://www.scifi-movies.com/images/site/en/affiche_nondisponible.jpg'
 
-        companies = []
-        #for x in range(0,len(data['production_companies'])):
-        #   companies.append(Company.objects.get(company_id=data['production_companies'][x]['id']))
-        genres = []
-
-        for x in range(0, len(data['genres'])):
-            genres.append(Genre.objects.get(genre_id=data['genres'][x]['id']))
-
         movie = Movie.objects.create(
             movie_id=data['id'],
             title=data['title'],
             overview=data['overview'],
             vote_count=data['vote_count'],
             vote_average=data['vote_average'],
-            poster_path=full_path
+            poster_path=full_path,
+            adults=data['adult']
         )
-
-        for x in genres:
-            movie.genres.add(x)
-        for x in companies:
-            movie.production_companies.add(x)
+        for x in range(0, len(data['genres'])):
+            print(x)
+            movie.genres.add(Genre.objects.get(genre_id=data['genres'][x]['id']))
 
     return movie
 
@@ -161,25 +152,10 @@ def get_cast_from_API(movie_id):
 
 
 def readData(request):
-    data = get_cast_from_API(38348)
-    cast = data['cast']
-    cast_list =[]
-    for x in range (0, len(cast)):
-        name = cast[x]['name']
-        path = 'https://image.tmdb.org/t/p/original'+ str(cast[x]['profile_path'])
-        character = cast[x]['character']
-        popularity = cast[x]['popularity']
-        actor_id = cast[x]['id']
-        actor = Actor.objects.create(
-            actor_id=actor_id,
-            name=name,
-            profile_path=path,
-            character=character,
-            popularity=popularity
-        )
-        cast_list.append(actor)
-    print(cast_list)
 
+    for row in Movie.objects.all().reverse():
+        if Movie.objects.filter(movie_id=row.movie_id).count() > 1:
+            row.delete()
     context = {}
     return render(request, 'MovieRecommender/read_data.html', context)
 

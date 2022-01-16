@@ -11,13 +11,20 @@
         width:200px;
         height:350px;
     }
+    .movie-image{
+        border-radius: 40px;
+    }
 </style>
 
 <div class = "movie-container">
     {%  for movie in movies %}
         <div class = "movie-panel">
              <h3>{{ movie.title }}</h3>
-             <a href="/movie={{ movie.id }}"><img width = "200" height ="300" src="{{movie.poster_path}}"/></a>
+                <a href="/movie={{ movie.id }}">
+                      <div class="movie-image">
+                          <img width = "200" height ="300" src="{{movie.poster_path}}"/>
+                      </div>
+                </a>
         </div>
     {% endfor %}
 </div>

@@ -38,5 +38,7 @@ urlpatterns = [
 
     path('search/', search.search, name='search'),
     path('actor=<str:pk>', actor_views.actor_profile, name='actor-profile'),
-    path('similar-movie-to/<str:pk>', movie_views.get_similar_movies, name='similar-movies')
+    path('similar-movie-to/<str:pk>', movie_views.get_similar_movies, name='similar-movies'),
+    path('trending-movies/', movie_views.trending_movies, name='trending-movies')
+
 ]
