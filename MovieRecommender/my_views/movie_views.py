@@ -1,3 +1,5 @@
+from django.db.models import Count
+
 from MovieRecommender.views import *
 
 
@@ -40,15 +42,16 @@ def addToFavourites(request, pk):
     try:
         movie = Movie.objects.get(movie_id=pk)
     except:
-        movie = Movie.objects.filter(movie_id=pk).values()[0]
+        movie = Movie.objects.filter(movie_id=pk).first()
+
     user = request.user
     profile = Profile.objects.get(user_id=user)
+
     try:
         profile.fav_movies.get(id =movie.id)
         profile.fav_movies.remove(movie)
     except:
         profile.fav_movies.add(movie)
-
     profile.save()
 
     return redirect('movie', movie.id)
