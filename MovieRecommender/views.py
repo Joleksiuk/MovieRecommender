@@ -138,7 +138,9 @@ def get_movie_from_API(movie_id):
         for x in range(0, len(data['genres'])):
             print(x)
             movie.genres.add(Genre.objects.get(genre_id=data['genres'][x]['id']))
-    movie.save()
+
+    if movie is not None:
+        movie.save()
     return movie
 
 

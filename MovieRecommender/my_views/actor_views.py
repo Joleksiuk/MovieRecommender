@@ -1,8 +1,6 @@
 from MovieRecommender.views import *
 
 
-
-
 def actor_profile(request, pk):
 
     actor = get_actor_from_API(pk)
