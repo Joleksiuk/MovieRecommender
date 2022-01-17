@@ -13,6 +13,8 @@ def search(request):
         Q(name__contains=q)
     )
 
+    print(profiles.values())
+
     search_value = q.replace(' ', '+')
     api_path = 'http://api.themoviedb.org/3/search/person?api_key=4b5f9777a2d363363cbb7d26017f0052&query=' +search_value
     response_API = requests.get(api_path)

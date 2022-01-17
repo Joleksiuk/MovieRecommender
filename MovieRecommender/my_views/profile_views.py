@@ -1,6 +1,6 @@
 from MovieRecommender.views import *
 
-
+@login_required(login_url='login')
 def userProfile(request, pk):
     try:
         user = User.objects.get(id=pk)

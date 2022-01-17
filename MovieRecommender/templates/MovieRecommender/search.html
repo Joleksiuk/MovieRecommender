@@ -3,37 +3,53 @@
 
 {%  block content  %}
 <style>
-    .main-container{
+    .search-container{
         display:grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 3fr 2fr 3fr;
     }
+
+     .user-panel{
+        margin: 10px;
+    }
+    .user-image{
+        border-radius: 10px;
+        width:140px;
+        height:170px;
+    }
+
 </style>
-
-
-    <div class="main-container">
+    <br>
+    <div class="search-container">
          <div>
             <h1>Forum Topics</h1>
-                 <div>
-                    {%  include 'MovieRecommender/topic_component.html' %}
-                    {%  include 'MovieRecommender/feed_component.html' %}
+             <br>
+             {%  include 'MovieRecommender/topic_component.html' %}
+             {%  include 'MovieRecommender/feed_component.html' %}
+         </div>
+
+         <div>
+            <h1>Movies</h1>
+             <br>
+             {%  include 'MovieRecommender/movies_component.html' %}
+         </div>
+
+         <div>
+            <h1>Profiles</h1>
+         <br>
+            {% for profile in profiles %}
+                <div class="user-panel">
+                    <h4>{{ profile }}</h4>
+                    <a href = "{% url 'user-profile' profile.user_id.id %}">
+                        <img class="user-image" src="{%  static profile.picture_path  %}" onerror="this.onerror=null; this.src='https://iupac.org/wp-content/uploads/2018/05/default-avatar.png'" />
+                    </a>
                 </div>
 
-        </div>
-
-        <div>
-            <h1>Movies</h1>
-             {%  include 'MovieRecommender/movies_component.html' %}
-        </div>
-
-        <div>
-            <h1>Profiles</h1>
-            {% for profile in profiles %}
-                <h4>{{ profile }}</h4>
             {% endfor %}
-        </div>
+         </div>
 
          <div>
             <h1>Actors</h1>
+             <br>
              {%  include 'MovieRecommender/cast_component.html' %}
          </div>
 

@@ -3,8 +3,24 @@
 {% block content %}
     <style>
         .room-container{
+            margin:200px;
             display:grid;
             grid-template-columns: 3fr 1fr;
+        }
+
+        .messege{
+        background-color: #434c6d;
+        padding: 5px;
+        border-radius: 5px;
+        margin: 5px;
+            box-shadow: rgba(109, 109, 243, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    }
+        .participants{
+            background-color: #5a3879;
+            margin-left: 50px;
+            padding:20px;
+            border-radius: 20px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(173, 99, 245, 0.35) 0px -2px 6px 0px inset;
         }
     </style>
     <div class ="room-container">
@@ -16,7 +32,7 @@
                 <h3>Conversation</h3>
                 <hr>
                 {% for message in room_messages %}
-                    <div>
+                    <div class="messege">
                     {%  if request.user == messege.user %}
                     <a href="{%  url 'delete-message' message.id %}">Delete</a>
                     {% endif %}
@@ -37,11 +53,13 @@
         </div>
 
 
-        <div>
+        <div class="participants">
             <h3>Participants</h3>
             {% for user in participants %}
                 <div>
-                <p>@{{ user.username }}</p>
+                <a href =" {% url 'user-profile' user.id  %}">
+                    <p style="color:white">@{{ user.username }}</p>
+                </a>
                 </div>
             {% endfor %}
         </div>
