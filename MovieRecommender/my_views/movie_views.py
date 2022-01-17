@@ -37,7 +37,10 @@ def trending_movies(request):
 
 
 def addToFavourites(request, pk):
-    movie = Movie.objects.get(movie_id=pk)
+    try:
+        movie = Movie.objects.get(movie_id=pk)
+    except:
+        movie = Movie.objects.filter(movie_id=pk).values()[0]
     user = request.user
     profile = Profile.objects.get(user_id=user)
     try:
